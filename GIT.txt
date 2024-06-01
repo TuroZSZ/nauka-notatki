@@ -1,0 +1,302 @@
+**** GIT ****
+
+Git - jest to system kontroli wersji oprogramowania.
+Jest pomocny w podążaniu za zmianami oraz we wspólnej pracy nad kodem.
+
+Instalujemy Git na komputerze. Program to de facto terminal.
+
+Sprawdzanie wersji: 
+git --version
+
+Git i zdalne magazyny (repositories)
+Git i GitHub do dwie różne rzeczy. Przewodnik opisuje Git, choć pokazuje on też zasadę działania z GitHubem.
+
+Co robi Git?
+- umożliwia zarządzanie projektami z repozytoriami
+- kopiowanie projektu aby działać na jego kopii lokalnej
+- kontrola i śledzenie zmian przy pomocy Staging i Committing
+- Branch i Merge umożliwiają pracę nad różnymi częściami i różnymi wersjami projektu
+- pobieranie najnowszej wersji aby użyć jej lokalnie
+- wysyłanie swojej lokalnej wersji aby zaktualizować główny projekt
+
+Working with Git
+
+    Initialize Git on a folder, making it a Repository
+    Git now creates a hidden folder to keep track of changes in that folder
+    When a file is changed, added or deleted, it is considered modified
+    You select the modified files you want to Stage
+    The Staged files are Committed, which prompts Git to store a permanent snapshot of the files
+    Git allows you to see the full history of every commit.
+    You can revert back to any previous commit.
+    Git does not store a separate copy of every file in every commit, but keeps track of changes made in each commit!
+
+Why Git?
+
+    Over 70% of developers use Git!
+    Developers can work together from anywhere in the world.
+    Developers can see the full history of the project.
+    Developers can revert to earlier versions of a project.
+
+What is GitHub?
+
+    Git is not the same as GitHub.
+    GitHub makes tools that use Git.
+    GitHub is the largest host of source code in the world, and has been owned by Microsoft since 2018.
+    In this tutorial, we will focus on using Git with GitHub.
+
+Konfiguracja:
+git config -- user.name "TuroZSZ"
+git config --global user.email "jaroslaw.turo@gmail.com"
+
+Uwaga - opcja global to ustawienie username i email dla każdego repozytorium na kompie.
+
+Stworzenie nowego folderu:
+mkdir git_nauka  ->  stworzenie w users/user/git_nauka
+
+Można też wybrać folder ręcznie, PPM i opcja "Git Bash here".
+
+Aby zainicjalizować folder należy wpisać komendę:
+git init
+
+! Trzeba być w tym folderze. Wchodzi się przez komendę "cd" (jak w windows)
+
+### Git adding new files
+Stworzone repozytorium jest puste. Dodajmy foldery. Można to zrobić przy użyciu prostego kodu HTML.
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>Repozytorium git_nauka</title>
+</head>
+<body>
+
+<h1>Nowy projekt</h1>
+<p>Nauka Git aby zwiększyć swoje kompetencje</p>
+
+</body>
+</html>
+
+Aby sprawdzić listę wszystkich plików w folderze, w terminalu git wpisujemy komendę:
+ls
+
+Lista plików wyświetli się pod spodem. 
+
+W następnym kroku sprawdzamy jaki jest status Git i czy jest częścią naszego repozytorium:
+git status
+
+W wyniku pokaże się np.:
+jaroslaw.turowski@JTURO MINGW64 ~/git_nauka (master)
+$ git status
+On branch master
+
+No commits yet
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+        index.html
+
+nothing added to commit but untracked files present (use "git add" to track)
+
+Z tego dowiadujemy się, że plik nie jest dodany do repozytorium.
+Tracked - pliki dodane do repozytorium
+Untracked - pliki w folderu roboczym Git ale niedodane do repozytorium.
+
+Aby dodać:
+$ git add index.html
+
+W ramach ćwiczeń ze szkolenia dodano readme.md i bluestyle.css. Zedytowano index.html
+
+Aby dodać wszystko do repozytorium wykorzystujemy:
+git add --all
+
+Wyjście:
+anita@Anita MINGW64 ~/desktop/naukaGIT (master)
+$ git status
+On branch master
+
+No commits yet
+
+Changes to be committed:
+  (use "git rm --cached <file>..." to unstage)
+        new file:   bluestyle.css
+        new file:   index.html
+        new file:   readme.md
+
+PS. Krótsza forma formuły git add --all to git add -A
+
+######### GIT COMMIT  
+Ponieważ zakończyliśmy naszą pracę, jesteśmy gotowi przejść od etapu do zatwierdzenia naszego repo.
+
+Dodawanie zatwierdzeń umożliwia śledzenie naszych postępów i zmian w trakcie pracy. Git uwzględnia każdy punkt zmiany zatwierdzenia lub „punkt zapisu”. Jest to punkt projektu, do którego możesz wrócić, jeśli znajdziesz błąd lub chcesz dokonać zmiany.
+
+Kiedy zatwierdzamy (commit), powinniśmy zawsze dołączyć wiadomość.
+
+Dodając jasne komunikaty do każdego zatwierdzenia, możesz łatwo sobie (i innym) zobaczyć, co się zmieniło i kiedy.
+
+Komenda:
+git commit -m "Pierwsza odsłona, build 10001"
+
+commit - performs a commit, -m add message
+
+# wyjście:
+[master (root-commit) 221ec6e] First release of Hello World!
+ 3 files changed, 26 insertions(+)
+ create mode 100644 README.md
+ create mode 100644 bluestyle.css
+ create mode 100644 index.html
+
+ ### GIT COMMIT WITHOUT STAGE - czasem zmiany są na tyle małe, że nieopłacalne jest przechodzenie przez środowisko staging. Można wdrożyć zmiany bezpośrednio. Opcja -a automatycznie zaktualizuje wszelkie zmiany w pliku o statusie "tracked"
+
+ # przykład: mała aktualizacja index.html - commitment of repo:
+
+ git comit -a -m "Mała zmiana, dopisanie jednej linii kodu"
+
+ [master db7acf7] Mała zmiana, dopisanie jednej linii kodu
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+ Można sprawdzić krótszą wersję raportu zmian przy pomocy komendy"
+
+ git status --short
+
+ # short status flags:
+    ?? - untracked files
+    A - files added to stage
+    M - modified files
+    D - deleted files
+
+Uwaga! Pomijanie Staging Environment nie jest generalnie polecane, przez możliwość zapisywania wadliwych wersji.
+
+### GIT COMMIT LOG - aby sprawdzić historię zmian w repozytorium używamy komendy log:
+git log
+
+#Wyjście:
+commit db7acf7b06a9a6226a79a78edb1fa4e1a941569f (HEAD -> master)
+Author: TuroZSZ <jaroslaw.turo@gmail.com>
+Date:   Fri Feb 9 22:12:16 2024 +0100
+
+    Mała zmiana, dopisanie jednej linii kodu
+
+commit aa3de2e425358609ea58f963bc430ec819af2fe0
+Author: TuroZSZ <jaroslaw.turo@gmail.com>
+Date:   Fri Feb 9 22:01:37 2024 +0100
+
+    Pierwsza odsłona, build 10001
+
+
+###&&&___^___&&&### GIT HELP - jeśli zapomni się komend lub opcji, to zawsze można użyć komendy "help":
+
+git <command> -help - wszystkie możliwe opcje dla komendy wpisanej zamiast <command>
+git help --all - wszystkie możliwe komendy
+
+Np. git commit -help  --- pokaże się lista dostępnych komend i opcji.
+
+Wpisanie --help zamiast -help spowoduje otworzenie strony z dokumentacją.
+
+### GIT HELP - ALL POSSIBLE COMMANDS - 
+tylko uwaga - lista jest bardzo długa. Komenda:
+
+git help --all
+
+###&&&___^___&&&### GIT BRANCH - w GIT, branch czyli gałąź, to nowa/wydzielona wersja głównego repozytorium.
+
+Bez GIT, tworzenie nowej wersji byłoby związane z koniecznością kopiowania wszystkich plików. Dostępne różne wersje powodowałyby zamęt, ponieważ inny dział zajmujący się błędami mógłby naprawić błąd na wersji przed poprawą naszego błędu itd.
+
+GIT umożliwia stworzenie nowej gałęzi, naprawę w niej błędu i zapisanie tej zmiany przez logi.
+
+### NEW GIT BRANCH 
+Przykład - pracujemy na lokalnym repozytorium i nie chcemy przeszkadzać/powodować awarii głównego projektu.
+Tworzmy branch:
+
+git branch obrazki      #"obrazki" to nazwa nowej gałęzi
+
+Sprawdzamy:
+git branch
+Wyjście: 
+C:\Users\anita\Desktop\naukaGIT>git branch
+* master
+  obrazki
+
+Widzimy wszystkie istniejące gałęzie. * przy "master" wskazuje, że jesteśmy w tym miejscu, w tej gałęzi.
+Aby zmienić gałąź wpisujemy komendę z odpowiednią nazwą na końcu:
+
+git checkout obrazki
+
+Po tej komendzie pracujemy w tej gałęzi i nie zmieniamy przez to głównego repozytorium.
+
+Sprawdzamy status przez: git status w cmd
+wyjście: 
+On branch obrazki
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+        modified:   index.html
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+        GIT.md
+        dziki_gon.jpg
+
+no changes added to commit (use "git add" and/or "git commit -a")
+
+Zmiany jakie nastąpiły:
+dziki_gon nie jest śledzony "untracked"
+są zmiany w index.html ale nie przeniesiono pliku w tryb commit
+
+Oba pliki dodajemy do staging environment tej gałęzi poprzez:
+git add --all
+
+Sprawdzamy status -> git status
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+        new file:   dziki_gon.jpg
+        modified:   index.html
+
+Teraz możemy wykonać operację commit do naszej gałęzi:
+git commit -m "Dodano obrazek Dzikiego Gonu"
+
+Wyświetli nam się informacja:
+[obrazki f894e76] Dodano obrazek Dzikiego Gonu
+ 3 files changed, 201 insertions(+)
+ create mode 100644 GIT.md
+ create mode 100644 dziki_gon.jpg
+
+Wszystkie zmiany zostały zapisane w naszej gałęzi.
+
+# info - używanie opcji -b przy funkcji checkout spowoduje stworzenie nowej gałęzi i przeniesienie do niej pod warunkiem, że dotychczas nie istniała.
+
+sprawdzanie plików w gałęzi obrazki:
+git ls-files
+
+Wyjście:
+GIT.md
+bluestyle.css
+dziki_gon.jpg
+index.html
+readme.md
+
+PRzejście do głównej gałęzi i sprawdzenie - git checkout master - git ls-files:
+bluestyle.css
+index.html
+readme.md 
+Jak widać, żadne działania w gałęzi głównej nie zostały wprowadzone.
+
+### EMERGENCY BRANCH - wyobraźmy sobie sytuację, że nie dokończyliśmy gałęzi "obrazki" natomiast w głównej gałęzi pojawił się problem do rozwiązania na szybko.
+Tworzymy nową gałąź i od razu do niej przechodzimy:
+git checkout -b emergency-fix
+Switched to a new branch 'emergency-fix'
+
+Przenosimy plik index.html do staging environment:
+git add index.html
+A następnie commit:
+git commit -m "Aktualizacja pliku index html w sytuacji awaryjnej.
+
+Teraz będziemy gotowi na to, aby scalić pliki z obu gałęzi.
+
+###&&&___^___&&&### GIT BRANCH MERGE (łączyć)
+
+
+
+
+
+
+

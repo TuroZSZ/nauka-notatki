@@ -1,0 +1,648 @@
+Nauka SQL 
+
+select * from Customers
+Komenda wybiera wszystkie wyniki (*) z tabeli Customers.
+
+select distinct Country from Customers
+
+Ta komenda z kolei wybiera wszystkie wyniki z kolumny Country 
+z tabeli Customers i wyświetla je pojedynczo - czyli jeśli jest
+pięć wyników "Norway" to pokaże tylko jeden. To kraje które występują w tabeli.
+
+Ilość pojedynczych wystąpień danego kraju/krajów możemy sprawdzić przez:
+select count(distinct Country) from Customers
+
+SQL where:
+
+SELECT column1, column2, ...
+FROM table_name
+WHERE condition;
+
+Np. select * from Customers
+where Country='Mexico'
+
+where jest stosowane także w przypadku UPDATE, DELETE czy innych.
+
+SQL wymaga wartości tekstowych w pojedynczych cudzysłowach (choć większość systemów akceptuje też podwójne)
+Wartości liczbowe nie powinny być w cudzysłowach. Np.:
+
+SELECT * FROM Customers
+WHERE CustomerID=1; 
+Dla komendy where można używać różnych operatorów:
+SELECT * FROM Customers
+WHERE CustomerID > 80; 
+
+Dwa warunki:
+SELECT * FROM Customers
+Where City = "Warsaw"
+AND PostalCode = "00273"
+
+Tak samo dla "OR"
+
+WHERE NOT
+
+Używane operatory: =, >, <, >=, <=, <> (nierówne - w innych wersjach sql - !=), between, like, in
+
+SQL ORDER BY:
+Ogólna składnia (syntax)
+SELECT column1, column2, ...
+FROM table_name
+ORDER BY column1, column2, ... ASC|DESC;
+
+Order by - czyli uszeregowanie w kolejności malejącej lub rosnącej (ASC/DESC) wedle wybranej kolumny. Np:
+
+SELECT * FROM Products
+ORDER BY Price ASC (DESC)
+
+Dla wartości tekstowych (string values) możliwe jest porządkowanie alfabetyczne:
+
+select * from Products
+order by ProductName ASC
+
+order by przy kilku kolumnach:
+Możliwa jest sytuacja w której chcemy uszeregować wartości wedle dwóch kolumn. Pierwsza podana wartość to wartość "główna", czyli pierwsze szeregowanie. 
+Druga wartość szereguje wartości jeśli pierwsza wartość jest taka sama dla kilku wyników. 
+Przykład:
+select * from Customers
+OREDER BY Country, CustomerName
+
+Dla różnych kolumn można szeregować na dowolny sposób:
+select * from CustomersORDER BY Country ASC, CustomerName DESC;
+
+The SQL AND operator
+Przykład: jeśli chcemy wybrać wyniki z tabeli klientów z Hiszpanii, którzy nazywają sie na literę G:
+select *
+from Customers
+Where Country = 'Spain' AND CustomerName like 'G%';
+
+Ogólna składnia (syntax):
+SELECT column1, column2, ...
+FROM table_name
+WHERE condition1 AND condition2 AND condition3 ...;
+
+Inny przykład:
+
+Select * FROM Customers
+WHERE COuntry= 'Germany'
+AND City = 'Berlin'
+AND PostalCode > '12000'
+
+Kombinacja AND i OR
+Podobny przykład do pierwszego - klienci nazywający się na G lub R:
+
+select * FROM Customers
+WHERE Country = 'Spain'
+AND (CUstomerNAme LIKE 'G%' OR CustomerName like 'R%')
+
+The SQL OR operator
+Np.: select * from Customers
+WHERE Country = 'SPain' OR Country = 'Germany'
+
+The NOT operator
+
+select * from Customers
+WHERE NOT Country = 'Spain'
+
+Przykład: klienci którzy nie zaczynają się na literę A
+
+select * from Customers
+WHERE CustomerName NOT LIKE 'A%';
+
+NOT between
+przykład:
+
+select * from Customers
+where CustomerID NOT BETWEEN 10 AND 60;
+
+NOT IN
+Przykład:
+Select * Customers
+WHERE City NOT IN ('Paris', 'London')
+
+NOT GREATER / NOT LESS Than
+
+select * FROM Customers
+WHERE NOT CustomerID > 50
+
+lub dla not less:
+
+WHERE NOT CustomerID < 50
+
+SQL INSERT INTO statement
+
+Komenda insert into jest stosowana do stworzenian nowych danych w bazie.
+Istnieją dwa sposoby zapisywania składni zapytania, aby dodać dane:
+
+1. W sytuacji, gdy musimy dodać dane do określonych kolumn, lecz nie wszystkich:
+INSERT INTO table_name (column1, column2, column3, ...)
+VALUES (value1, value2, value3, ...)
+
+2. Jeśli dodajemy dane dotyczące wszystkich kolumn w tabeli, to nie musimy ich precyzować:
+INSERT INTO table_name
+VALUES (value1, value2, value3, ...)
+
+Uwaga! Nie dodajemy żadnego numeru do kolumny ID - SQL generuje ten numer automatycznie, gdy zostaną nowe dane do tabeli.
+
+Przykłady: 
+INSERT INTO Customers (CustomerName, ContactName, Address, City, PostalCode, Country)
+VALUES ('Cardinal', 'Tom B. Erichsen', 'Skagen 21', 'Stavanger', '4006', 'Norway');
+
+INSERT INTO Customers (CustomerName, City, Country)
+VALUES ('Cardinal', 'Stavanger', 'Norway');
+
+W powyższym przykładzie dane pojawią się tylko w kilku kolumnach. W tych kolumnach, w których nie dodano żadnej wartości, będzie pusto (null)
+
+Aby dodać więcej wierszy naraz, musimy zapisać wiersze jeden pod drugim, upewniając się, że wiersze są oddzielone przecinkami:
+INSERT INTO Customers (CustomerName, ContactName, Address, City, PostalCode, Country)
+VALUES
+('Cardinal', 'Tom B. Erichsen', 'Skagen 21', 'Stavanger', '4006', 'Norway'),
+('Greasy Burger', 'Per Olsen', 'Gateveien 15', 'Sandnes', '4306', 'Norway'),
+('Tasty Tee', 'Finn Egan', 'Streetroad 19B', 'Liverpool', 'L1 0AA', 'UK');
+
+NULL VALUES
+
+Null to komórka w której nie ma wartości - nawet spacji (która jest jakąś wartością)
+Nie da się określić wartości NULL przy użyciu operatorów: =,< czy <>
+Operatory dedykowane dla tego: IS NULL i IS NOT NULL.
+
+Składnia:
+SELECT column_names
+FROM table_name
+WHERE column_name IS NULL; 
+
+SELECT column_names
+FROM table_name
+WHERE column_name IS NOT NULL; 
+
+The SQL UPDATE statement
+UPDATE syntax:
+UPDATE table_name
+SET column1 = value1, column2 = value2, ...
+WHERE condition; 
+
+!!! Dokładność jest bardzo ważna w komendzie update. W przypadku, 
+gdy nie określimy warunku przy WHERE to wszystkie recordy w tabeli zostaną zaktualizowane.
+
+Przykład zastosowania update:
+UPDATE Customers
+SET ContactNAme = 'Alfred Schmidt', City='Frankfurt'
+WHERE CustomerID = 1;
+
+UPDATE Multiple records
+WHERE determinuje ile danych w tabeli zostanie zmienionych.
+Przykład:
+UPDATE Customers
+SET ContactNAme='Juan'
+WHERE Country= 'Mexico';
+
+Tym samym każde imię w bazie dla Country='Mexico' zostanie przemianowane na Juan.
+
+SQL delete statement
+
+
+#### SQL MIN() and MAX() functions - wskazanie najmniejszej lub największej wartości w kolumnie.
+
+MIN()
+select MIN(Price)
+from Products;
+
+MAX()
+select MAX(Price)
+from Products;
+
+Ogólnie - składnia:
+select MIN/MAX(column_name)
+from table_name
+where condition;
+
+Można również nadać nową nazwę (alias) dla wartości zwrotnej. W tym celu używamy komendy AS:
+select min(Price) AS "taniej się nie da" lub tanio
+from Products;
+
+Wyjście - najmniejsza wartość + nasz opis.
+
+### the SQL count() function - funkcja wskazuje liczbę wierszy z wartością warunkową.
+Składnia (syntax):
+select count(column_name) ~ gwiazdka oznacza wszystkie kolumny
+from table_name
+where condition;
+
+Przykład - warunek. Jeśli sprecyzujemy kolumnę - damy jej nazwę w nawiasie zamiast * to wartości NULL nie będą liczone.
+select count(ProductID)
+from Products
+where Price > 20;
+
+##### Ignore duplicates - można zignorować duplikaty przy użyciu komendy DISTINCT. PRzykład:
+select count(distinct Price)
+from Products;
+
+#### use alias - nadawanie liczonej kolumnie nazwy przez AS:
+select count(*) AS [number of records]
+from Products;
+
+
+
+##### The SQL SUM() function - sumowanie
+
+### przykład - zwróć sumę wszystkich elementów z kolumny Quantity z tabeli OrderDetails
+
+select sum(Quantity)
+from OrderDetails;
+
+SYNTAX:
+select sum(column_name)
+from table_name
+where condition;
+
+Przykład z warunkiem:
+select sum(Quantity)
+from OrderDetails
+where ProductId = 11;
+
+Tak jak w poprzednim module, możemy użyć aliasu:
+select sum(Quantity) AS total
+from OrderDetails;
+
+Parametr w środku funkcji sum() może być również wyrażeniem. Można mnożyć sumę elementów np. razy cenę aby otrzymać łączny koszt:
+select sum(Quantity * 10)
+from OrderDetails;
+
+Możliwe jest stworzenie wyrażenia, które jest powiązaniem ilości i ceny (która znajduje się w innnej tabeli):
+select sum (Price * Quantity)
+from OrderDetails
+LEFT JOIN Products ON OrderDetails.ProductId = Products.ProductId
+
+Przykład: chcemy policzyć sumę pieniędzy za rzecz z OrderDetailsID=48:
+select sum (Price * Quantity)
+from OrderDetails
+LEFT JOIN Products ON OrderDetails.ProductID = Products.ProductID
+where OrderDetailID = 48
+
+W pierwszym kroku określamy sumę i wyrażenie - cena * ilość. Nasze zamówienie 
+wybieramy z tabeli OrderDetails, a następnie określamy, że ProductID z tabeli OrderDetails
+to to samo co ProductID z tabeli Products. Dzięki temu możemy pobrać dane Price z tabeli Products
+dla danego elementu. Na koniec precyzujemy warunek, że dotyczy to zamówienia
+nr 48.
+
+########## The SQL AVG() function- funkcja wyliczania średniej (która ignoruje wartości NULL):
+syntax:
+select avg(column_name)
+from table_name
+where condition;
+
+select avg(Price)
+from Products;
+A z warunkiem:
+select avg(Price)
+from Products
+where CategoryID = 1;
+tak samo możemy użyć aliasu:
+sleect avg(Price) AS [average price]
+from Products;
+
+Aby wypunktować wszystkie rekordy z ceną wyższą od średniej, także możemy użyć funkcji avg():
+
+select * from Products
+where Price > (select avg(Price) from Products);
+
+####### SQL LIKE operator
+
+
+Operator LIKE jest używane w wyrażeniu WHERE aby określić wzornik (pattern) do szukania.
+Istnieją dwa "wildcards", które są stosowane spójnie do LIKE:
+% - reprezentuje zero, jeden lub wiele znaków
+_ - reprezentuje pojedynczy znak.
+
+SYNTAX:
+select column1, column2, ...
+from table_name
+where condition (column) LIKE pattern;
+
+Przykład:
+select * from Customers
+where CustomerName LIKE 'a%';
+
+### The _ Wildcard - wywołanie wszystkich wyników zaczynających się na L, potem jeden znak, następnie 'nd' i po nim dwa dowolne znaki:
+
+select * from Customer
+where City like 'L__nd__';
+
+### The % Wildcard - wywołanie wszystkich wyników zawierających 'L':
+select * from Customers
+where city like '%L%'
+
+### Starts with - aby znaleźć wyniki, które zaczynają się od określonej litery lub wyrażenia:
+#retur-n all customers that starts with "La":
+select * from Customers
+where CustomerName Like 'La%';
+
+Można także łączyć wyszukiwanie operatorami OR i AND:
+select * from Customers
+where CustomerName like 'a%' OR CustomerName like 'b%';
+
+### Ends with - analogicznie - na czym się kończy
+select * from Customers
+where CustomerName like '%a';  ## możliwe jest również połączenie starts with i ends with:
+
+select * from Customers
+where CustomerName like 'b%s';
+
+### Contains - wyrażenia zawierające żądane znaki:
+select * from Customers
+where CustomerName like '%or%'
+
+### Combine wildcards - można korzystać z różnych konfiguracji wildcards:
+select * from Customers
+where CustomerName like '_r%';
+
+### without wildcard - po prostu szukana wartość/ciąg:
+select * from Customers
+where Country LIKE 'Spain'
+
+ćwiczenia:
+Select all records where the first letter of the City is an "a" or a "c" or an "s".
+
+SELECT * FROM Customers
+WHERE City LIKE '[acs]%';
+
+Select all records where the first letter of the City starts with anything from an "a" to an "f".
+
+select * from Customers
+where City like '[a-f]%';
+
+Select all records where the first letter of the City is NOT an "a" or a "c" or an "f".
+
+select * from Customers
+where City like '[!acf]%';
+
+
+###&&&___#___&&&### SQL IN Operator
+Operator IN pozwala na określenie wielu wartości w funkcji WHERE
+Operator IN to takie skrócenie - stosuje się go zamiast wielu warunków OR:
+
+SYNTAX
+select column_name(s)
+from table_name
+where column_name IN (value1, value2, value3, ...)
+
+Przykład
+select * from Customers
+where Country IN ('Germany', 'France', 'UK')
+
+### NOT IN - return all customers except:
+
+select * from Customers
+where Country NOT IN ('Germany', 'France', 'UK');
+
+### IN (SELECT) - można użyć operatora IN jako podzapytania w WHERE
+Można zwrócić wyniki z głównego zapytania (query) które są również obecne w "subquery"
+
+select * from Customers
+where CustomerID IN (select CustomerID FROM Orders)
+
+### NOT IN (SELECT) - analogiczny przykład negatywny:
+Return all customers that have NOT placed any orders in the Orders table:
+SELECT * FROM Customers
+WHERE CustomerID NOT IN (SELECT CustomerID FROM Orders);
+
+###&&&___#___&&&### SQL BETWEEN operator - operator between zwraca wartości z podanego zakresu.
+SYNTAX
+select column_name(s)
+from table_name
+where column_name BETWEEN value1 AND value2;
+
+Np.:
+select * from Products
+where Price between 10 AND 20;
+
+### NOT BETWEEN - wszystko spoza podanego zakresu
+select * from Products
+where Price not between 10 and 20;
+
+### BETWEEN with IN: The following SQL statement selects all products with a price between 10 and 20. In addition, the CategoryID must be either 1,2, or 3:
+
+select * from Products
+where Price between 10 and 20
+AND CategoryID IN (1,2,3); 
+
+### BETWEEN text values - The following SQL statement selects all products with a ProductName alphabetically between Carnarvon Tigers and Mozzarella di Giovanni:
+
+select * from Products
+where ProductName between 'Carnarvon Tigers' AND 'Mozarella di Giovanni'
+ORDER BY ProductName
+
+### NOT BETWEEN text values - analogicznie do NOT IN dla liczb. 
+
+### BETWEEN dates 
+select * from Orders
+where OrderDate between #07/01/1996# AND #07/31/1996#; lub WHERE OrderDate BETWEEN '1996-07-01' AND '1996-07-31';
+
+
+###&&&___#___&&&### SQL ALIASES - aliasy są stosowane aby dać tabeli lub kolumnie tymczasowe nazwy.
+Aliasy są stosowane aby kolumny były lepiej rozpoznawalne i istnieją tylko i wyłącznie w czasie zapytania (query).
+Aliasy tworzy się przez słowo kluczowe AS:
+
+select CustomerID AS CustomerID
+From Customers;
+
+### AS is optional - w wielu systemach bazodanowych można pominąć AS i uzyskać ten sam efekt:
+SELECT CustomerID ID 
+FROM Customers;
+
+### SYNTAX
+select column_name AS alias_name
+from table_name;
+
+# gdy alias jest na nazwie tabeli:
+
+select column_name(s)
+from table_name AS alias_name;
+
+### Alias for columns - wówczas wymieniamy po kolei:
+select CustomerID as ID, CustomerName as CustomerID
+from Customers;
+
+### using aliases with a space character - If you want your alias to contain one or more spaces, like "My Great Products", 
+surround your alias with square brackets or double quotes.
+
+select ProductName AS [My Great Products]
+From Products; lub
+
+select ProductName AS "My Great Products" - niektóre systemy akceptują oba, a niektóre tylko jeden z nich.
+
+### CONCATENATE COLUMNS - dwie kolumny - pierwsza to CustomerName a druga to stworzenie aliasu "Address" z czterech kolumn i innych elementów:
+select CustomerName, Address + ', ' + PostalCode + " " + City ', ' + Country AS Address
+from Customers;
+
+To samo dla MySQL:
+SELECT CustomerName, CONCAT(Address,', ',PostalCode,', ',City,', ',Country) AS Address
+FROM Customers; 
+
+I dla Oracle:
+SELECT CustomerName, (Address || ', ' || PostalCode || ' ' || City || ', ' || Country) AS Address
+FROM Customers; 
+
+### ALIAS FOR TABLES-
+select * from Customers AS Persons;
+
+Aliases can be useful when:
+
+    There are more than one table involved in a query
+    Functions are used in the query
+    Column names are big or not very readable
+    Two or more columns are combined together
+
+###&&&___#___&&&### SQL JOINS - Klauzula JOIN służy do łączenia wierszy z dwóch lub większej liczby tabel 
+na podstawie powiązanej kolumny między nimi.
+Notice that the "CustomerID" column in the "Orders" table refers to the "CustomerID" in the "Customers" table. The relationship between the two tables above is the "CustomerID" column.
+Then, we can create the following SQL statement (that contains an INNER JOIN), that selects records that have matching values in both tables:
+
+Different Types of SQL JOINs
+
+Here are the different types of the JOINs in SQL:
+
+    (INNER) JOIN: Returns records that have matching values in both tables
+    LEFT (OUTER) JOIN: Returns all records from the left table, and the matched records from the right table
+    RIGHT (OUTER) JOIN: Returns all records from the right table, and the matched records from the left table
+    FULL (OUTER) JOIN: Returns all records when there is a match in either left or right table
+
+Czyli:
+
+W tabeli A jest 20 wierszy, a w kolumnie B 12. Wspólną kolumną jest delta_id - tych id jest 7.
+INNER JOIN - wyświetla tylko elementy z obydwu kolumn, które mają elementy wspólne - czyli delta_id
+W naszym wyniku zapytania będzie 7 wierszy. 
+Zapytanie:
+select * 
+from A (pierwsza tabela) INNER JOIN (rodzaj wiązania) B (druga tabela)
+ON (element wspólny tabel) A.delta_id = B.delta_id
+
+###&&&___^___&&&### SQL Inner JOIN
+INNER JOIN wybiera rekordy z tabel, które mają wartości wspólne (wszystkie rekordy, które nie mają wartości wspólnych są odrzucane)
+Jeśli w którejś tabeli jest wiersz, który nie posiada delta_id, to nie będzie on pokazany w INNER JOIN.
+
+# SYNTAX
+Select column_name
+from table1
+INNER JOIN table2
+ON table1.column_name=table2.column_name;
+
+### Naming the Columns
+Jeśli potrzebujemy tylko wybranych kolumn z obydwu tabel, to wybieramy je w select, wypisując po przecinku:
+SELECT Products.ProductID, Products.ProductName, Categories.CategoryName
+
+### JOIN or INNER JOIN
+JOIN and INNER JOIN will return the same result.
+INNER is the default join type for JOIN, so when you write JOIN the parser actually writes INNER JOIN.
+
+### JOIN Three Tables - możliwe jest dodawanie do siebie większej ilości tabel:
+SELECT Orders.OrderID, Customers.CustomerName, Shippers.ShipperName
+From ((Orders
+INNER JOIN Customers ON Orders.CustomerID = Customers.CustomerID)
+INNER JOIN SHIPPERS ON Orders.ShipperID=Shippers.ShipperID)
+
+###&&&___^___&&&### SQL LEFT JOIN Keyword
+
+SELECT Customers.CustomerName, Orders.OrderID
+FROM Customers
+LEFT JOIN Orders ON Customers.CustomerID = Orders.CustomerID
+ORDER BY Customers.CustomerName;
+
+# Note: 
+Note: The LEFT JOIN keyword returns all records from the left table (Customers), even if there are no matches in the right table (Orders).
+
+###&&&___^___&&&### SQL RIGHT JOIN Keyword
+
+The RIGHT JOIN keyword returns all records from the right table (table2), and the matching records from the left table (table1). 
+The result is 0 records from the left side, if there is no match.
+
+Note: In some databases RIGHT JOIN is called RIGHT OUTER JOIN
+SELECT Orders.OrderID, Employees.LastName, Employees.FirstName
+FROM Orders
+RIGHT JOIN Employees ON Orders.EmployeeID = Employees.EmployeeID
+ORDER BY Orders.OrderID; 
+
+###&&&___^___&&&### SQL FULL OUTER JOIN Keyword
+
+The FULL OUTER JOIN keyword returns all records when there is a match in left (table1) or right (table2) table records.
+Tip: FULL OUTER JOIN and FULL JOIN are the same.
+
+SELECT Customers.CustomerName, Orders.OrderID
+FROM Customers
+FULL OUTER JOIN Orders ON Customers.CustomerID=Orders.CustomerID
+ORDER BY Customers.CustomerName;
+
+A selection from the result set may look like this:
+CustomerName 	                        OrderID
+Null 	                                10309
+Null 	                                10310
+Alfreds Futterkiste 	                Null
+Ana Trujillo Emparedados y helados 	    10308
+Antonio Moreno Taquería 	            Null
+
+Jak widzimy, dzięki FULL JOIN wyświetlamy wszystkie wyniki z podanych tabel, nawet jeśli wartości są null.
+
+###&&&___^___&&&### SQL SELF JOIN Keyword
+
+A self join is a regular join, but the table is joined with itself.
+Syntax:
+SELECT column_name(s)
+FROM table1 T1, table1 T2
+WHERE condition;
+
+T1 and T2 are different table aliases for the same table.
+
+SELECT A.CustomerName AS CustomerName1, B.CustomerName AS CustomerName2, A.City
+FROM Customers A, Customers B
+WHERE A.CustomerID <> B.CustomerID
+AND A.City = B.City
+ORDER BY A.City;
+
+###&&&___^___&&&### SQL Union Operator
+Operator Union jest stosowany do łączenia wyników dwóch lub więcej zapytań SELECT.
+
+Każdy SELECT w UNION musi mieć dokladnie taką samą liczbę kolumn.
+Kolumny muszą mieć podobne typy danych.
+Kolumny w każdym SELECT muszą być w tym samym porządku.
+
+### SYNTAX
+select column_name(s) from table1
+UNION
+select column_name(s) from table2
+
+### UNION ALL syntax
+Operator UNION łączy tylko wybrane wartości/wyniki SELECT. Aby móc złączyć (i duplikować) wartości używamy UNION ALL:
+SELECT column_name(s) FROM table1
+UNION ALL
+SELECT column_name(s) FROM table2; 
+
+Porównanie Union i union ALL
+W tabelach Customers i Suppliers są kolumny: Country
+Połączymy wyniki z obydwu wyników SELECT:
+
+SELECT Country from Customers
+UNION
+Select Country from Suppliers;
+
+Wyjście: 25 wyników. Wszystkie państwa pojedynczo, niezależnie od ilości wystąpień.
+
+W union all dopuszczalne są wartości powtórzone,
+stąd wyjście dla UNION ALL: 120
+
+### SQL UNION with where
+the following SQL statement returns the German cities (only distinct values) 
+from both the "Customers" and the "Suppliers" table:
+
+select City, Country from Customers
+where Country="Germany"
+UNION
+select City, Country from Supplier
+where Country="Germany"
+order by City;
+
+Warunkowanie UNION ALL z where jest takie samo.
+
+
+
+
+
+
